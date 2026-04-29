@@ -24,6 +24,15 @@ window.addEventListener("scroll", () => {
   header.classList.toggle("is-scrolled", window.scrollY > 24);
 });
 
+function onPageReady(callback) {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", callback, { once: true });
+    return;
+  }
+
+  callback();
+}
+
 function loadKakaoRoughMap() {
   const mapContainer = document.querySelector(`#${kakaoMapConfig.containerId}`);
 
@@ -48,15 +57,19 @@ function loadKakaoRoughMap() {
     mapContainer.closest(".map-wrap")?.classList.add("is-loaded");
   };
 
+  const renderMapAfterLayout = () => {
+    window.requestAnimationFrame(renderMap);
+  };
+
   if (window.daum?.roughmap?.Lander) {
-    renderMap();
+    renderMapAfterLayout();
     return;
   }
 
   const existingLoader = document.querySelector(`script[src="${kakaoMapConfig.loaderSrc}"]`);
 
   if (existingLoader) {
-    existingLoader.addEventListener("load", renderMap, { once: true });
+    existingLoader.addEventListener("load", renderMapAfterLayout, { once: true });
     return;
   }
 
@@ -64,11 +77,11 @@ function loadKakaoRoughMap() {
   script.src = kakaoMapConfig.loaderSrc;
   script.charset = "UTF-8";
   script.async = true;
-  script.onload = renderMap;
+  script.onload = renderMapAfterLayout;
   document.head.appendChild(script);
 }
 
-window.addEventListener("load", loadKakaoRoughMap);
+onPageReady(loadKakaoRoughMap);
 
 reservationForm.addEventListener("submit", async (event) => {
   event.preventDefault();

@@ -315,6 +315,16 @@ a {
   font-size: clamp(2rem, 4.5vw, 4.35rem);
 }
 
+.about-heading {
+  align-items: center;
+  grid-template-columns: minmax(220px, 0.55fr) minmax(320px, 1fr);
+}
+
+.about-heading h2 {
+  max-width: 780px;
+  font-size: clamp(2.25rem, 3.6vw, 3.75rem);
+}
+
 .section-heading p {
   margin: 0;
   max-width: 640px;
