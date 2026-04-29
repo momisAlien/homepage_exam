@@ -47,13 +47,56 @@ function loadRoughMapScript() {
       return;
     }
 
+    const originalWrite = document.write.bind(document);
+    const originalWriteln = document.writeln.bind(document);
+
+    const restoreDocumentWrite = () => {
+      document.write = originalWrite;
+      document.writeln = originalWriteln;
+    };
+
+    const appendScriptFromDocumentWrite = (markup: string) => {
+      const src = markup.match(/src=["']([^"']+)["']/i)?.[1];
+
+      if (!src) {
+        originalWrite(markup);
+        return;
+      }
+
+      const landerScript = document.createElement("script");
+      landerScript.charset = "UTF-8";
+      landerScript.src = src;
+      landerScript.async = true;
+      landerScript.onload = () => {
+        restoreDocumentWrite();
+        resolve();
+      };
+      landerScript.onerror = () => {
+        restoreDocumentWrite();
+        reject(new Error("카카오맵 roughmapLander.js 로드 실패"));
+      };
+
+      document.body.appendChild(landerScript);
+    };
+
+    document.write = appendScriptFromDocumentWrite;
+    document.writeln = appendScriptFromDocumentWrite;
+
     const script = document.createElement("script");
     script.id = SCRIPT_ID;
     script.src = SCRIPT_SRC;
     script.charset = "UTF-8";
     script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("카카오맵 roughmapLoader.js 로드 실패"));
+    script.onload = () => {
+      if (window.daum?.roughmap?.Lander) {
+        restoreDocumentWrite();
+        resolve();
+      }
+    };
+    script.onerror = () => {
+      restoreDocumentWrite();
+      reject(new Error("카카오맵 roughmapLoader.js 로드 실패"));
+    };
 
     document.body.appendChild(script);
   });
