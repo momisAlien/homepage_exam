@@ -21,6 +21,45 @@ declare global {
 
 const SCRIPT_ID = "kakao-roughmap-loader";
 const MAP_ID = "daumRoughmapContainer1777444943797";
+const SCRIPT_SRC = "https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js";
+
+let roughMapLoaderPromise: Promise<void> | null = null;
+
+function loadRoughMapScript() {
+  if (window.daum?.roughmap?.Lander) {
+    return Promise.resolve();
+  }
+
+  if (roughMapLoaderPromise) {
+    return roughMapLoaderPromise;
+  }
+
+  roughMapLoaderPromise = new Promise((resolve, reject) => {
+    const existingScript = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
+
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(), { once: true });
+      existingScript.addEventListener(
+        "error",
+        () => reject(new Error("카카오맵 roughmapLoader.js 로드 실패")),
+        { once: true }
+      );
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = SCRIPT_ID;
+    script.src = SCRIPT_SRC;
+    script.charset = "UTF-8";
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("카카오맵 roughmapLoader.js 로드 실패"));
+
+    document.body.appendChild(script);
+  });
+
+  return roughMapLoaderPromise;
+}
 
 export default function KakaoRoughMap() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -28,7 +67,6 @@ export default function KakaoRoughMap() {
 
   useEffect(() => {
     let cancelled = false;
-    let observer: IntersectionObserver | null = null;
 
     const renderMap = (retry = 0) => {
       if (cancelled || renderedRef.current) return;
@@ -37,8 +75,10 @@ export default function KakaoRoughMap() {
       const Lander = window.daum?.roughmap?.Lander;
 
       if (!container || !Lander) {
-        if (retry < 20) {
+        if (retry < 30) {
           window.setTimeout(() => renderMap(retry + 1), 100);
+        } else {
+          console.error("카카오맵 Lander 준비 실패");
         }
         return;
       }
@@ -56,47 +96,12 @@ export default function KakaoRoughMap() {
       container.closest(".map-wrap")?.classList.add("is-loaded");
     };
 
-    const loadScriptAndRender = () => {
-      const existingScript = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
-
-      if (existingScript) {
-        renderMap();
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.id = SCRIPT_ID;
-      script.src = "https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js";
-      script.charset = "UTF-8";
-      script.async = true;
-      script.onload = () => renderMap();
-      script.onerror = () => {
-        console.error("카카오맵 roughmapLoader.js 로드 실패");
-      };
-
-      document.body.appendChild(script);
-    };
-
-    const container = containerRef.current;
-
-    if (!container || typeof IntersectionObserver === "undefined") {
-      loadScriptAndRender();
-    } else {
-      observer = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry?.isIntersecting) return;
-          observer?.disconnect();
-          loadScriptAndRender();
-        },
-        { threshold: 0.1 }
-      );
-
-      observer.observe(container);
-    }
+    loadRoughMapScript()
+      .then(() => window.requestAnimationFrame(() => renderMap()))
+      .catch((error) => console.error(error));
 
     return () => {
       cancelled = true;
-      observer?.disconnect();
     };
   }, []);
 
