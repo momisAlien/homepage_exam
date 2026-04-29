@@ -129,10 +129,12 @@ export default function KakaoRoughMap() {
       renderedRef.current = true;
       container.innerHTML = "";
 
+      const mapWidth = String(Math.max(Math.round(container.getBoundingClientRect().width || 640), 320));
+
       new Lander({
         timestamp: "1777444943797",
         key: "mwfdh3z3d4h",
-        mapWidth: "100%",
+        mapWidth,
         mapHeight: "360",
       }).render();
 
