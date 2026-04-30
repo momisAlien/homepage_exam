@@ -127,7 +127,7 @@ export default function HomePage() {
     });
   };
 
-  const scrollPhotoSlider = (direction: number) => {
+  const scrollPhotoSlider = (visualDirection: "left" | "right") => {
     const slider = sliderRef.current;
     if (!slider) return;
 
@@ -135,13 +135,14 @@ export default function HomePage() {
     if (maxScroll <= 0) return;
 
     const distance = Math.max(slider.clientWidth * 0.72, 280);
-    let nextLeft = slider.scrollLeft + direction * distance;
+    const scrollAmount = visualDirection === "left" ? -distance : distance;
+    let nextLeft = slider.scrollLeft + scrollAmount;
 
-    if (direction > 0 && nextLeft >= maxScroll - 8) {
+    if (visualDirection === "right" && nextLeft >= maxScroll - 8) {
       nextLeft = 0;
     }
 
-    if (direction < 0 && nextLeft <= 8) {
+    if (visualDirection === "left" && nextLeft <= 8) {
       nextLeft = maxScroll;
     }
 
@@ -245,10 +246,10 @@ export default function HomePage() {
             ))}
           </div>
           <div className="slider-controls" aria-label="현장 사진 슬라이드 이동">
-            <button type="button" onClick={() => scrollPhotoSlider(-1)} aria-label="이전 사진 보기">
+            <button type="button" onClick={() => scrollPhotoSlider("left")} aria-label="이전 사진 보기">
               ‹
             </button>
-            <button type="button" onClick={() => scrollPhotoSlider(1)} aria-label="다음 사진 보기">
+            <button type="button" onClick={() => scrollPhotoSlider("right")} aria-label="다음 사진 보기">
               ›
             </button>
           </div>
