@@ -65,7 +65,6 @@ export default function HomePage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePhoto, setActivePhoto] = useState<number | null>(null);
   const [activeCheckPoint, setActiveCheckPoint] = useState(0);
-  const [slidePage, setSlidePage] = useState(1);
   const [formStatus, setFormStatus] = useState("");
   const [formError, setFormError] = useState(false);
   const sliderRef = useRef<HTMLDivElement | null>(null);
@@ -105,21 +104,22 @@ export default function HomePage() {
     const slider = sliderRef.current;
     if (!slider) return;
 
-    const nextPage = Math.min(Math.max(slidePage + direction, 1), slidePhotos.length);
-    setSlidePage(nextPage);
-    slider.scrollBy({
-      left: direction * Math.max(slider.clientWidth * 0.72, 280),
+    const maxScroll = slider.scrollWidth - slider.clientWidth;
+    const distance = Math.max(slider.clientWidth * 0.72, 280);
+    let nextLeft = slider.scrollLeft + direction * distance;
+
+    if (direction > 0 && nextLeft >= maxScroll - 8) {
+      nextLeft = 0;
+    }
+
+    if (direction < 0 && nextLeft <= 8) {
+      nextLeft = maxScroll;
+    }
+
+    slider.scrollTo({
+      left: nextLeft,
       behavior: "smooth",
     });
-  };
-
-  const updateSlidePage = () => {
-    const slider = sliderRef.current;
-    if (!slider) return;
-
-    const maxScroll = Math.max(slider.scrollWidth - slider.clientWidth, 1);
-    const progress = slider.scrollLeft / maxScroll;
-    setSlidePage(Math.min(slidePhotos.length, Math.max(1, Math.round(progress * (slidePhotos.length - 1)) + 1)));
   };
 
   const handleReservationSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -203,7 +203,7 @@ export default function HomePage() {
             <h2>사진으로 먼저 보는 현장</h2>
             <a href="#photos">전체 사진 보기</a>
           </div>
-          <div className="photo-slider" ref={sliderRef} onScroll={updateSlidePage}>
+          <div className="photo-slider" ref={sliderRef}>
             {slidePhotos.map((photo, index) => (
               <figure key={photo.src} onClick={() => setActivePhoto(index + 1)}>
                 <img src={photo.src} alt={photo.alt} />
@@ -219,9 +219,6 @@ export default function HomePage() {
             <button type="button" onClick={() => scrollPhotoSlider(-1)} aria-label="이전 사진 보기">
               ‹
             </button>
-            <span>
-              {slidePage} / {slidePhotos.length}
-            </span>
             <button type="button" onClick={() => scrollPhotoSlider(1)} aria-label="다음 사진 보기">
               ›
             </button>

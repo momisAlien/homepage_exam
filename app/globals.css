@@ -91,9 +91,9 @@ a {
 }
 
 .desktop-nav {
-  gap: clamp(14px, 3vw, 32px);
-  font-size: 0.94rem;
-  font-weight: 600;
+  gap: clamp(28px, 4vw, 58px);
+  font-size: clamp(1.08rem, 1.45vw, 1.42rem);
+  font-weight: 900;
 }
 
 .desktop-nav a {
@@ -352,28 +352,23 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 28px;
   margin-top: 12px;
 }
 
 .slider-controls button {
   display: grid;
-  width: 48px;
-  height: 48px;
+  width: 54px;
+  height: 54px;
   place-items: center;
-  border: 1px solid #e1e6ee;
+  border: 2px solid #1d2844;
   border-radius: 50%;
   color: #172033;
   background: var(--white);
   box-shadow: 0 6px 16px rgba(18, 37, 64, 0.1);
   cursor: pointer;
-  font-size: 1.8rem;
+  font-size: 2rem;
   line-height: 1;
-}
-
-.slider-controls span {
-  color: #687284;
-  font-weight: 900;
 }
 
 .block-heading {
@@ -1026,6 +1021,7 @@ a {
     width: 100%;
     justify-content: space-between;
     gap: 6px;
+    font-size: 0.92rem;
   }
 
   .desktop-nav a {
