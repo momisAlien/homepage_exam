@@ -196,8 +196,8 @@ export default function HomePage() {
               8세대 한정 분양
             </h1>
             <p className="hero-copy">
-              숲과 산세가 가까운 조용한 입지에서 누리는 단독주택의 여유. 실거주, 세컨하우스,
-              은퇴 후 주거까지 고려한 원페이지 분양 안내입니다.
+              숲이 품은 고요한 자연 속에서 누리는 단독주택의 여유를 누려보세요. 
+              실거주, 세컨하우스, 은퇴 후 주거까지 고려한 원페이지 분양 안내입니다.
             </p>
             <div className="hero-actions">
               <a className="primary-button" href="#reservation">
@@ -258,7 +258,7 @@ export default function HomePage() {
           <div className="block-heading">
             <p className="eyebrow">About the Village</p>
             <h2>
-              도심에서 조금 벗어나,
+              도심에서 벗어나,
               <br />
               일상이 쉬어가는 전원주택
             </h2>
@@ -269,9 +269,10 @@ export default function HomePage() {
           <div className="about-grid">
             <div className="about-copy">
               <p>
-                원주 신림 전원주택은 자연과 가까운 생활을 원하는 분들을 위한 소규모 주거
-                단지입니다. 단정한 외관, 밝은 내부, 마당과 테라스가 어우러지는 구성으로 조용하고
-                실용적인 전원생활을 제안합니다.
+                자연의 헤리티지를 품은 원주 신림, 그곳에 안목 있는 소수만을 위한 
+                프라이빗 빌리지가 있습니다.절제된 미학의 건축물과 따스한 빛으로 채워진 공간, 
+                그리고 자연과 경계를 허무는 테라스까지. 단순한 머무름을 넘어,
+                일상이 예술이 되는 가장 우아한 전원의 삶을 선사합니다."
               </p>
               <ul className="blue-bullet-list">
                 {aboutFeatureItems.map((item) => (
@@ -322,8 +323,8 @@ export default function HomePage() {
         <section className="blue-check-section" aria-label="위치와 단지 장점">
           <div className="block-heading">
             <p className="eyebrow">Check Point</p>
-            <h2>위치와 장점을 빠르게 확인하세요</h2>
-            <p>항목을 누르면 관련 이미지와 설명을 함께 확인할 수 있습니다.</p>
+            <h2>프리미엄 전원생활의 조건</h2>
+            <p> 자연과 역사가 어우러진 일상을 확인해보세요..</p>
           </div>
           <div className="check-showcase">
             <div className="check-list-panel" role="list">
