@@ -58,6 +58,24 @@ const checkPointItems = [
   },
 ];
 
+const promoSlides = [
+  {
+    title: "발코니 확장 무상 · 전용 테라스",
+    text: "세대별 프라이빗 야외 공간까지 부담 없이 확인해 보세요.",
+    image: "/image/promo_1.jpg",
+  },
+  {
+    title: "방 3개와 복층 구조",
+    text: "실거주, 서재, 취미 공간까지 나누기 좋은 구성을 갖췄습니다.",
+    image: "/image/promo_2.jpg",
+  },
+  {
+    title: "20평 규모 다용도실",
+    text: "수납, 작업, 취미 공간으로 활용도 높은 여유 공간을 제공합니다.",
+    image: "/image/promo_3.jpg",
+  },
+];
+
 const kakaoMapUrl =
   "https://map.kakao.com/link/search/%EA%B0%95%EC%9B%90%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%9B%90%EC%A3%BC%EC%8B%9C%20%EC%8B%A0%EB%A6%BC%EB%A9%B4%20%EC%97%B0%EB%B4%89%EC%A0%95%EA%B8%B8%2059-6";
 
@@ -65,6 +83,7 @@ export default function HomePage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePhoto, setActivePhoto] = useState<number | null>(null);
   const [activeCheckPoint, setActiveCheckPoint] = useState(0);
+  const [activePromo, setActivePromo] = useState(0);
   const [formStatus, setFormStatus] = useState("");
   const [formError, setFormError] = useState(false);
   const sliderRef = useRef<HTMLDivElement | null>(null);
@@ -93,6 +112,14 @@ export default function HomePage() {
     };
   }, [activePhoto]);
 
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActivePromo((current) => (current + 1) % promoSlides.length);
+    }, 1800);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
   const movePhoto = (direction: number) => {
     setActivePhoto((current) => {
       if (current === null) return current;
@@ -105,6 +132,8 @@ export default function HomePage() {
     if (!slider) return;
 
     const maxScroll = slider.scrollWidth - slider.clientWidth;
+    if (maxScroll <= 0) return;
+
     const distance = Math.max(slider.clientWidth * 0.72, 280);
     let nextLeft = slider.scrollLeft + direction * distance;
 
@@ -255,6 +284,38 @@ export default function HomePage() {
                 <img key={image.src} src={image.src} alt={image.alt} />
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="promo-slideshow" aria-label="전원주택 특별 혜택">
+          {promoSlides.map((slide, index) => (
+            <article
+              className={`promo-slide ${activePromo === index ? "is-active" : ""}`}
+              key={slide.title}
+              aria-hidden={activePromo !== index}
+            >
+              <img src={slide.image} alt="" />
+              <div className="promo-overlay" aria-hidden="true" />
+              <div className="promo-content">
+                <p className="eyebrow">Special Benefit</p>
+                <h2>{slide.title}</h2>
+                <p>{slide.text}</p>
+                <a className="promo-button" href="#reservation">
+                  특별혜택 확인하기
+                </a>
+              </div>
+            </article>
+          ))}
+          <div className="promo-dots" aria-label="혜택 슬라이드 선택">
+            {promoSlides.map((slide, index) => (
+              <button
+                className={activePromo === index ? "is-active" : ""}
+                key={slide.title}
+                type="button"
+                onClick={() => setActivePromo(index)}
+                aria-label={`${index + 1}번째 혜택 보기`}
+              />
+            ))}
           </div>
         </section>
 
