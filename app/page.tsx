@@ -1,7 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import KakaoRoughMap from "@/components/KakaoRoughMap";
 
 const photos = [
@@ -22,20 +22,20 @@ const slidePhotos = photos.slice(1, 7);
 
 const benefitItems = [
   {
-    title: "원주시 신림면 연봉정길 59-6",
-    text: "현장 위치와 주변 환경을 지도와 사진으로 함께 확인할 수 있습니다.",
+    title: "옥전자연휴양림까지 차로 10분",
+    text: "가까운 거리에서 숲길과 계곡, 휴양림 산책을 누릴 수 있습니다.",
   },
   {
-    title: "총 8세대 소규모 단지",
-    text: "대단지보다 조용하고 관리 동선이 단순한 프라이빗 주거 구성입니다.",
+    title: "원주 및 제천 시내까지 차로 20분",
+    text: "조용한 입지이면서도 생활권 이동이 부담스럽지 않습니다.",
   },
   {
-    title: "외부, 내부, 조망 사진 제공",
-    text: "건물 외관부터 복층 내부와 창밖 조망까지 현장 분위기를 먼저 볼 수 있습니다.",
+    title: "용소막 성당까지 차로 5분",
+    text: "원주 8경 중 7경으로 꼽히는 명소가 가까운 입지입니다.",
   },
   {
-    title: "방문 전 상담 예약제",
-    text: "연락처를 남기면 담당자가 확인 후 방문 가능 일정과 상담 내용을 안내합니다.",
+    title: "산과 물, 조망이 좋은 전원 생활",
+    text: "경치 좋고 산 좋고 물 좋은 환경에서 여유로운 일상을 제안합니다.",
   },
 ];
 
@@ -45,8 +45,10 @@ const kakaoMapUrl =
 export default function HomePage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePhoto, setActivePhoto] = useState<number | null>(null);
+  const [slidePage, setSlidePage] = useState(1);
   const [formStatus, setFormStatus] = useState("");
   const [formError, setFormError] = useState(false);
+  const sliderRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 24);
@@ -77,6 +79,27 @@ export default function HomePage() {
       if (current === null) return current;
       return (current + direction + photos.length) % photos.length;
     });
+  };
+
+  const scrollPhotoSlider = (direction: number) => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    const nextPage = Math.min(Math.max(slidePage + direction, 1), slidePhotos.length);
+    setSlidePage(nextPage);
+    slider.scrollBy({
+      left: direction * Math.max(slider.clientWidth * 0.72, 280),
+      behavior: "smooth",
+    });
+  };
+
+  const updateSlidePage = () => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    const maxScroll = Math.max(slider.scrollWidth - slider.clientWidth, 1);
+    const progress = slider.scrollLeft / maxScroll;
+    setSlidePage(Math.min(slidePhotos.length, Math.max(1, Math.round(progress * (slidePhotos.length - 1)) + 1)));
   };
 
   const handleReservationSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -160,16 +183,28 @@ export default function HomePage() {
             <h2>사진으로 먼저 보는 현장</h2>
             <a href="#photos">전체 사진 보기</a>
           </div>
-          <div className="photo-slider">
+          <div className="photo-slider" ref={sliderRef} onScroll={updateSlidePage}>
             {slidePhotos.map((photo, index) => (
               <figure key={photo.src} onClick={() => setActivePhoto(index + 1)}>
                 <img src={photo.src} alt={photo.alt} />
                 <figcaption>
                   <span>{String(index + 1).padStart(2, "0")}</span>
-                  {photo.caption}
+                  <strong>{photo.caption}</strong>
+                  <small>현장 사진 미리보기</small>
                 </figcaption>
               </figure>
             ))}
+          </div>
+          <div className="slider-controls" aria-label="현장 사진 슬라이드 이동">
+            <button type="button" onClick={() => scrollPhotoSlider(-1)} aria-label="이전 사진 보기">
+              ‹
+            </button>
+            <span>
+              {slidePage} / {slidePhotos.length}
+            </span>
+            <button type="button" onClick={() => scrollPhotoSlider(1)} aria-label="다음 사진 보기">
+              ›
+            </button>
           </div>
         </section>
 
@@ -193,45 +228,30 @@ export default function HomePage() {
         </section>
 
         <section className="section about-section" id="about">
-          <div className="section-heading about-heading">
-            <p className="eyebrow">About the Village</p>
-            <h2>
-              도심에서 조금 벗어나,
-              <br />
-              일상이 쉬어가는 전원주택
-            </h2>
-          </div>
           <div className="about-grid">
             <div className="about-copy">
+              <p className="eyebrow">About the Village</p>
+              <h2>
+                도심에서 조금 벗어나,
+                <br />
+                일상이 쉬어가는 전원주택
+              </h2>
               <p>
                 원주 신림 전원주택은 자연과 가까운 생활을 원하는 분들을 위한 소규모 주거
                 단지입니다. 단정한 외관, 밝은 내부, 마당과 테라스가 어우러지는 구성으로 조용하고
                 실용적인 전원생활을 제안합니다.
               </p>
-              <ul className="check-list">
-                <li>강원특별자치도 원주시 신림면 연봉정길 59-6</li>
-                <li>총 8세대 규모의 프라이빗 단지</li>
-                <li>내부, 외부, 조망 사진으로 현장 분위기 확인 가능</li>
-                <li>상담 신청 후 담당자 방문 일정 안내</li>
+              <ul className="blue-bullet-list">
+                {benefitItems.map((item) => (
+                  <li key={item.title}>{item.title}</li>
+                ))}
               </ul>
             </div>
-            <div className="feature-board" aria-label="분양 특징">
-              <div>
-                <strong>Private</strong>
-                <span>단독형 주거</span>
-              </div>
-              <div>
-                <strong>Garden</strong>
-                <span>마당과 테라스</span>
-              </div>
-              <div>
-                <strong>Nature</strong>
-                <span>산세와 조망</span>
-              </div>
-              <div>
-                <strong>Visit</strong>
-                <span>예약 상담</span>
-              </div>
+            <div className="about-media-grid" aria-label="전원주택 현장 이미지">
+              <img src="/image/outside_1.jpg" alt="건물 외부" />
+              <img src="/image/inside_first_floor.jpg" alt="건물 내부 1층" />
+              <img src="/image/view.jpg" alt="창밖 조망" />
+              <img src="/image/inside_second_floor.jpg" alt="건물 내부 2층" />
             </div>
           </div>
         </section>
