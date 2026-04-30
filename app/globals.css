@@ -7,6 +7,8 @@
   --green: #2e5f46;
   --green-dark: #173629;
   --gold: #b98e47;
+  --blue: #1d6fe8;
+  --blue-soft: #eef5ff;
   --white: #ffffff;
   --shadow: 0 24px 70px rgba(23, 54, 41, 0.16);
 }
@@ -255,34 +257,147 @@ a {
   font-weight: 800;
 }
 
-.quick-info {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-bottom: 1px solid var(--line);
+.photo-strip {
+  padding: clamp(34px, 5vw, 62px) clamp(18px, 4vw, 64px);
   background: var(--white);
+  border-bottom: 1px solid var(--line);
 }
 
-.quick-info article {
-  min-height: 190px;
-  padding: clamp(24px, 4vw, 46px);
-  border-right: 1px solid var(--line);
+.strip-heading {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.5fr) minmax(280px, 1fr) auto;
+  gap: 18px;
+  align-items: end;
+  margin-bottom: 22px;
 }
 
-.quick-info article:last-child {
-  border-right: 0;
+.strip-heading h2 {
+  margin: 0;
+  font-size: clamp(1.55rem, 3vw, 2.45rem);
+  line-height: 1.2;
 }
 
-.quick-info span {
-  color: var(--gold);
-  font-weight: 800;
+.strip-heading a {
+  justify-self: end;
+  color: var(--blue);
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-.quick-info h2 {
-  margin: 14px 0 8px;
-  font-size: 1.45rem;
+.photo-slider {
+  display: grid;
+  grid-auto-columns: minmax(280px, 34vw);
+  grid-auto-flow: column;
+  gap: 16px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 0 0 14px;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: var(--blue) var(--line);
 }
 
-.quick-info p,
+.photo-slider figure {
+  position: relative;
+  height: clamp(240px, 28vw, 390px);
+  margin: 0;
+  overflow: hidden;
+  background: var(--green-dark);
+  scroll-snap-align: start;
+  cursor: zoom-in;
+}
+
+.photo-slider img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.photo-slider figure:hover img {
+  transform: scale(1.035);
+}
+
+.photo-slider figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  color: var(--white);
+  background: linear-gradient(180deg, rgba(9, 22, 16, 0), rgba(9, 22, 16, 0.86));
+  font-weight: 900;
+}
+
+.photo-slider figcaption span {
+  color: #8cc1ff;
+  font-size: 0.85rem;
+}
+
+.blue-check-section {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(320px, 1fr);
+  gap: clamp(30px, 6vw, 86px);
+  padding: clamp(58px, 8vw, 98px) clamp(18px, 4vw, 64px);
+  background: var(--blue-soft);
+  border-bottom: 1px solid #d8e7fb;
+}
+
+.blue-check-copy h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4.2vw, 4rem);
+  line-height: 1.14;
+}
+
+.blue-check-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--white);
+  border: 1px solid #d8e7fb;
+}
+
+.blue-check-list li {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  min-height: 104px;
+  padding: 22px 24px 22px 66px;
+  border-bottom: 1px solid #d8e7fb;
+}
+
+.blue-check-list li:last-child {
+  border-bottom: 0;
+}
+
+.blue-check-list li::before {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--white);
+  background: var(--blue);
+  content: "✓";
+  font-size: 0.95rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.blue-check-list strong {
+  color: #143e70;
+  font-size: 1.08rem;
+}
+
+.blue-check-list span,
 .section-heading p,
 .about-copy p,
 .location-card p,
@@ -727,6 +842,8 @@ a {
   .hero,
   .section-heading,
   .about-grid,
+  .strip-heading,
+  .blue-check-section,
   .reservation-section {
     grid-template-columns: 1fr;
   }
@@ -736,17 +853,12 @@ a {
     padding-top: 118px;
   }
 
-  .quick-info {
-    grid-template-columns: 1fr;
+  .strip-heading {
+    align-items: start;
   }
 
-  .quick-info article {
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .quick-info article:last-child {
-    border-bottom: 0;
+  .strip-heading a {
+    justify-self: start;
   }
 
   .photo-grid {
@@ -810,6 +922,18 @@ a {
   .hero-actions {
     display: grid;
     grid-template-columns: 1fr;
+  }
+
+  .photo-slider {
+    grid-auto-columns: minmax(250px, 82vw);
+  }
+
+  .blue-check-list li {
+    padding: 20px 18px 20px 58px;
+  }
+
+  .blue-check-list li::before {
+    left: 18px;
   }
 
   .hero-panel {

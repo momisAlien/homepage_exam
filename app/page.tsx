@@ -18,6 +18,27 @@ const photos = [
   { src: "/image/view2.jpg", alt: "창밖 조망 추가 사진", caption: "창밖 조망" },
 ];
 
+const slidePhotos = photos.slice(1, 7);
+
+const benefitItems = [
+  {
+    title: "원주시 신림면 연봉정길 59-6",
+    text: "현장 위치와 주변 환경을 지도와 사진으로 함께 확인할 수 있습니다.",
+  },
+  {
+    title: "총 8세대 소규모 단지",
+    text: "대단지보다 조용하고 관리 동선이 단순한 프라이빗 주거 구성입니다.",
+  },
+  {
+    title: "외부, 내부, 조망 사진 제공",
+    text: "건물 외관부터 복층 내부와 창밖 조망까지 현장 분위기를 먼저 볼 수 있습니다.",
+  },
+  {
+    title: "방문 전 상담 예약제",
+    text: "연락처를 남기면 담당자가 확인 후 방문 가능 일정과 상담 내용을 안내합니다.",
+  },
+];
+
 const kakaoMapUrl =
   "https://map.kakao.com/link/search/%EA%B0%95%EC%9B%90%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%9B%90%EC%A3%BC%EC%8B%9C%20%EC%8B%A0%EB%A6%BC%EB%A9%B4%20%EC%97%B0%EB%B4%89%EC%A0%95%EA%B8%B8%2059-6";
 
@@ -133,22 +154,42 @@ export default function HomePage() {
           </aside>
         </section>
 
-        <section className="quick-info" aria-label="단지 핵심 장점">
-          <article>
-            <span>01</span>
-            <h2>자연 조망</h2>
-            <p>창밖으로 열리는 산세와 조용한 마을 풍경을 가까이 누립니다.</p>
-          </article>
-          <article>
-            <span>02</span>
-            <h2>단독형 구조</h2>
-            <p>각 세대의 독립감과 실용적인 생활 동선을 고려한 계획입니다.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <h2>방문 예약제</h2>
-            <p>상담 번호를 남기면 담당자가 확인 후 일정 안내를 드립니다.</p>
-          </article>
+        <section className="photo-strip" aria-label="현장 사진 슬라이드">
+          <div className="strip-heading">
+            <p className="eyebrow">Photo Preview</p>
+            <h2>사진으로 먼저 보는 현장</h2>
+            <a href="#photos">전체 사진 보기</a>
+          </div>
+          <div className="photo-slider">
+            {slidePhotos.map((photo, index) => (
+              <figure key={photo.src} onClick={() => setActivePhoto(index + 1)}>
+                <img src={photo.src} alt={photo.alt} />
+                <figcaption>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  {photo.caption}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <section className="blue-check-section" aria-label="위치와 단지 장점">
+          <div className="blue-check-copy">
+            <p className="eyebrow">Check Point</p>
+            <h2>
+              위치와 장점을
+              <br />
+              빠르게 확인하세요
+            </h2>
+          </div>
+          <ul className="blue-check-list">
+            {benefitItems.map((item) => (
+              <li key={item.title}>
+                <strong>{item.title}</strong>
+                <span>{item.text}</span>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section className="section about-section" id="about">
