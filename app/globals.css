@@ -264,11 +264,9 @@ a {
 }
 
 .strip-heading {
-  display: grid;
-  grid-template-columns: minmax(220px, 0.5fr) minmax(280px, 1fr) auto;
-  gap: 18px;
-  align-items: end;
-  margin-bottom: 22px;
+  max-width: 760px;
+  margin: 0 auto 28px;
+  text-align: center;
 }
 
 .strip-heading h2 {
@@ -278,7 +276,8 @@ a {
 }
 
 .strip-heading a {
-  justify-self: end;
+  display: inline-block;
+  margin-top: 12px;
   color: var(--blue);
   font-weight: 900;
   text-decoration: underline;
@@ -377,67 +376,123 @@ a {
   font-weight: 900;
 }
 
-.blue-check-section {
-  display: grid;
-  grid-template-columns: minmax(260px, 0.7fr) minmax(320px, 1fr);
-  gap: clamp(30px, 6vw, 86px);
-  padding: clamp(58px, 8vw, 98px) clamp(18px, 4vw, 64px);
-  background: var(--blue-soft);
-  border-bottom: 1px solid #d8e7fb;
+.block-heading {
+  max-width: 940px;
+  margin: 0 auto clamp(34px, 5vw, 70px);
+  text-align: center;
 }
 
-.blue-check-copy h2 {
+.block-heading h2 {
   margin: 0;
-  font-size: clamp(2rem, 4.2vw, 4rem);
+  font-size: clamp(2.1rem, 4.6vw, 4.8rem);
   line-height: 1.14;
 }
 
-.blue-check-list {
-  display: grid;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  background: var(--white);
-  border: 1px solid #d8e7fb;
+.block-heading p:last-child {
+  max-width: 720px;
+  margin: 18px auto 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.5vw, 1.18rem);
 }
 
-.blue-check-list li {
-  position: relative;
-  display: grid;
-  gap: 6px;
-  min-height: 104px;
-  padding: 22px 24px 22px 66px;
+.blue-check-section {
+  padding: clamp(72px, 9vw, 118px) clamp(18px, 4vw, 64px);
+  background: var(--blue-soft);
+  border-top: 1px solid #d8e7fb;
   border-bottom: 1px solid #d8e7fb;
 }
 
-.blue-check-list li:last-child {
-  border-bottom: 0;
-}
-
-.blue-check-list li::before {
-  position: absolute;
-  top: 24px;
-  left: 24px;
+.check-showcase {
   display: grid;
-  width: 26px;
-  height: 26px;
-  place-items: center;
-  border-radius: 50%;
-  color: var(--white);
-  background: var(--blue);
-  content: "✓";
-  font-size: 0.95rem;
+  grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.05fr);
+  gap: clamp(26px, 5vw, 70px);
+  align-items: center;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.check-list-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.check-list-panel button {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: 8px 18px;
+  width: 100%;
+  min-height: 118px;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  padding: 22px 26px;
+  color: #172033;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.check-list-panel button.is-active {
+  border-color: #3b4bc0;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.check-list-panel button span {
+  grid-row: span 2;
+  color: #3b4bc0;
   font-weight: 900;
-  line-height: 1;
+  line-height: 1.35;
 }
 
-.blue-check-list strong {
-  color: #143e70;
-  font-size: 1.08rem;
+.check-list-panel button strong {
+  font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+  line-height: 1.35;
 }
 
-.blue-check-list span,
+.check-list-panel button small {
+  color: #687284;
+  font-size: clamp(0.92rem, 1.3vw, 1.04rem);
+  line-height: 1.55;
+}
+
+.check-visual {
+  min-width: 0;
+}
+
+.check-visual > img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 18px;
+  object-fit: cover;
+  box-shadow: 0 18px 44px rgba(18, 37, 64, 0.14);
+}
+
+.check-thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.check-thumbs button {
+  min-width: 0;
+  border: 3px solid transparent;
+  border-radius: 12px;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.check-thumbs button.is-active {
+  border-color: #1d2844;
+}
+
+.check-thumbs img {
+  width: 100%;
+  aspect-ratio: 1 / 0.75;
+  object-fit: cover;
+}
+
 .section-heading p,
 .about-copy p,
 .location-card p,
@@ -488,6 +543,8 @@ a {
   grid-template-columns: minmax(320px, 0.92fr) minmax(360px, 1.08fr);
   gap: clamp(24px, 5vw, 72px);
   align-items: center;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .about-copy {
@@ -538,20 +595,17 @@ a {
 .about-media-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap: clamp(14px, 2vw, 24px);
+  align-items: stretch;
 }
 
 .about-media-grid img {
   width: 100%;
-  height: clamp(190px, 18vw, 280px);
+  aspect-ratio: 1.18 / 1;
+  height: auto;
   object-fit: cover;
   border-radius: 14px;
   box-shadow: 0 14px 34px rgba(18, 37, 64, 0.12);
-}
-
-.about-media-grid img:nth-child(1),
-.about-media-grid img:nth-child(4) {
-  transform: translateY(-14px);
 }
 
 .feature-board {
@@ -919,7 +973,7 @@ a {
   .section-heading,
   .about-grid,
   .strip-heading,
-  .blue-check-section,
+  .check-showcase,
   .reservation-section {
     grid-template-columns: 1fr;
   }
@@ -930,15 +984,15 @@ a {
   }
 
   .strip-heading {
-    align-items: start;
-  }
-
-  .strip-heading a {
-    justify-self: start;
+    text-align: left;
   }
 
   .photo-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .check-visual {
+    order: -1;
   }
 
   .location-layout {
@@ -1004,12 +1058,44 @@ a {
     grid-auto-columns: minmax(250px, 82vw);
   }
 
-  .blue-check-list li {
-    padding: 20px 18px 20px 58px;
+  .block-heading {
+    text-align: left;
   }
 
-  .blue-check-list li::before {
-    left: 18px;
+  .block-heading p:last-child {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .check-list-panel button {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: 18px;
+  }
+
+  .check-list-panel button span {
+    grid-row: auto;
+  }
+
+  .check-thumbs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .blue-bullet-list li {
+    padding-left: 46px;
+  }
+
+  .blue-bullet-list li::before {
+    width: 30px;
+    height: 30px;
+  }
+
+  .about-media-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-media-grid img {
+    aspect-ratio: 4 / 3;
   }
 
   .hero-panel {

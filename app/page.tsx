@@ -20,22 +20,41 @@ const photos = [
 
 const slidePhotos = photos.slice(1, 7);
 
-const benefitItems = [
+const aboutFeatureItems = [
+  "세대 별 프라이빗 테라스",
+  "전용 주차 공간",
+  "방 3개 구성",
+  "활용도 높은 복층 구조",
+  "20평 규모 다용도실",
+];
+
+const aboutImages = [
+  { src: "/image/about_1.jpg", alt: "세대 별 프라이빗 테라스" },
+  { src: "/image/about_2.jpg", alt: "전원주택 내부 공간" },
+  { src: "/image/about_3.jpg", alt: "창밖 조망" },
+  { src: "/image/about_4.jpg", alt: "복층 구조 내부" },
+];
+
+const checkPointItems = [
   {
     title: "옥전자연휴양림까지 차로 10분",
     text: "가까운 거리에서 숲길과 계곡, 휴양림 산책을 누릴 수 있습니다.",
+    image: "/image/check_1.jpg",
   },
   {
     title: "원주 및 제천 시내까지 차로 20분",
     text: "조용한 입지이면서도 생활권 이동이 부담스럽지 않습니다.",
+    image: "/image/check_2.jpg",
   },
   {
     title: "용소막 성당까지 차로 5분",
     text: "원주 8경 중 7경으로 꼽히는 명소가 가까운 입지입니다.",
+    image: "/image/check_3.jpg",
   },
   {
     title: "산과 물, 조망이 좋은 전원 생활",
     text: "경치 좋고 산 좋고 물 좋은 환경에서 여유로운 일상을 제안합니다.",
+    image: "/image/check_4.jpg",
   },
 ];
 
@@ -45,6 +64,7 @@ const kakaoMapUrl =
 export default function HomePage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePhoto, setActivePhoto] = useState<number | null>(null);
+  const [activeCheckPoint, setActiveCheckPoint] = useState(0);
   const [slidePage, setSlidePage] = useState(1);
   const [formStatus, setFormStatus] = useState("");
   const [formError, setFormError] = useState(false);
@@ -208,50 +228,74 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="blue-check-section" aria-label="위치와 단지 장점">
-          <div className="blue-check-copy">
-            <p className="eyebrow">Check Point</p>
-            <h2>
-              위치와 장점을
-              <br />
-              빠르게 확인하세요
-            </h2>
-          </div>
-          <ul className="blue-check-list">
-            {benefitItems.map((item) => (
-              <li key={item.title}>
-                <strong>{item.title}</strong>
-                <span>{item.text}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-
         <section className="section about-section" id="about">
+          <div className="block-heading">
+            <p className="eyebrow">About the Village</p>
+            <h2>
+              도심에서 조금 벗어나,
+              <br />
+              일상이 쉬어가는 전원주택
+            </h2>
+            <p>
+              독립적인 야외 공간과 실용적인 내부 구성을 갖춘 소규모 전원주택 단지입니다.
+            </p>
+          </div>
           <div className="about-grid">
             <div className="about-copy">
-              <p className="eyebrow">About the Village</p>
-              <h2>
-                도심에서 조금 벗어나,
-                <br />
-                일상이 쉬어가는 전원주택
-              </h2>
               <p>
                 원주 신림 전원주택은 자연과 가까운 생활을 원하는 분들을 위한 소규모 주거
                 단지입니다. 단정한 외관, 밝은 내부, 마당과 테라스가 어우러지는 구성으로 조용하고
                 실용적인 전원생활을 제안합니다.
               </p>
               <ul className="blue-bullet-list">
-                {benefitItems.map((item) => (
-                  <li key={item.title}>{item.title}</li>
+                {aboutFeatureItems.map((item) => (
+                  <li key={item}>{item}</li>
                 ))}
               </ul>
             </div>
             <div className="about-media-grid" aria-label="전원주택 현장 이미지">
-              <img src="/image/outside_1.jpg" alt="건물 외부" />
-              <img src="/image/inside_first_floor.jpg" alt="건물 내부 1층" />
-              <img src="/image/view.jpg" alt="창밖 조망" />
-              <img src="/image/inside_second_floor.jpg" alt="건물 내부 2층" />
+              {aboutImages.map((image) => (
+                <img key={image.src} src={image.src} alt={image.alt} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="blue-check-section" aria-label="위치와 단지 장점">
+          <div className="block-heading">
+            <p className="eyebrow">Check Point</p>
+            <h2>위치와 장점을 빠르게 확인하세요</h2>
+            <p>항목을 누르면 관련 이미지와 설명을 함께 확인할 수 있습니다.</p>
+          </div>
+          <div className="check-showcase">
+            <div className="check-list-panel" role="list">
+              {checkPointItems.map((item, index) => (
+                <button
+                  className={activeCheckPoint === index ? "is-active" : ""}
+                  key={item.title}
+                  onClick={() => setActiveCheckPoint(index)}
+                  type="button"
+                >
+                  <span>check {String(index + 1).padStart(2, "0")}</span>
+                  <strong>{item.title}</strong>
+                  <small>{item.text}</small>
+                </button>
+              ))}
+            </div>
+            <div className="check-visual">
+              <img src={checkPointItems[activeCheckPoint].image} alt={checkPointItems[activeCheckPoint].title} />
+              <div className="check-thumbs" aria-label="체크 포인트 이미지 선택">
+                {checkPointItems.map((item, index) => (
+                  <button
+                    className={activeCheckPoint === index ? "is-active" : ""}
+                    key={item.image}
+                    onClick={() => setActiveCheckPoint(index)}
+                    type="button"
+                  >
+                    <img src={item.image} alt="" />
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </section>
