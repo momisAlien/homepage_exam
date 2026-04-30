@@ -44,7 +44,7 @@ const checkPointItems = [
   {
     title: "원주 및 제천 시내까지 차로 20분",
     text: "조용한 입지이면서도 생활권 이동이 부담스럽지 않습니다.",
-    image: "/image/check_2.jpg",
+    image: "/image/check_2.png",
   },
   {
     title: "용소막 성당까지 차로 5분",
@@ -54,7 +54,7 @@ const checkPointItems = [
   {
     title: "산과 물, 조망이 좋은 전원 생활",
     text: "경치 좋고 산 좋고 물 좋은 환경에서 여유로운 일상을 제안합니다.",
-    image: "/image/check_4.jpg",
+    image: "/image/check_4.png",
   },
 ];
 
