@@ -134,17 +134,26 @@ export default function HomePage() {
     const maxScroll = slider.scrollWidth - slider.clientWidth;
     if (maxScroll <= 0) return;
 
-    const distance = Math.max(slider.clientWidth * 0.72, 280);
-    const scrollAmount = visualDirection === "left" ? -distance : distance;
-    let nextLeft = slider.scrollLeft + scrollAmount;
+    const cards = Array.from(slider.querySelectorAll("figure"));
+    const positions = cards.map((card) => card.offsetLeft - slider.offsetLeft);
+    const currentIndex = positions.reduce((closestIndex, position, index) => {
+      const closestDistance = Math.abs(positions[closestIndex] - slider.scrollLeft);
+      const distance = Math.abs(position - slider.scrollLeft);
+      return distance < closestDistance ? index : closestIndex;
+    }, 0);
 
-    if (visualDirection === "right" && nextLeft >= maxScroll - 8) {
-      nextLeft = 0;
+    const isAtStart = slider.scrollLeft <= 8;
+    const isAtEnd = slider.scrollLeft >= maxScroll - 8;
+    let targetIndex = visualDirection === "right" ? currentIndex + 2 : currentIndex - 2;
+
+    if (visualDirection === "right" && isAtEnd) {
+      targetIndex = 0;
+    } else if (visualDirection === "left" && isAtStart) {
+      targetIndex = positions.length - 1;
     }
 
-    if (visualDirection === "left" && nextLeft <= 8) {
-      nextLeft = maxScroll;
-    }
+    const boundedIndex = Math.max(0, Math.min(targetIndex, positions.length - 1));
+    const nextLeft = Math.max(0, Math.min(positions[boundedIndex], maxScroll));
 
     slider.scrollTo({
       left: nextLeft,
