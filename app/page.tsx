@@ -37,8 +37,8 @@ const aboutImages = [
 
 const checkPointItems = [
   {
-    title: "옥전자연휴양림까지 차로 10분",
-    text: "가까운 거리에서 숲길과 계곡, 휴양림 산책을 누릴 수 있습니다.",
+    title: "배론성지까지 차로 10분",
+    text: "한국 천주교 전파의 진원지를 바로 옆에서 만나보세요.",
     image: "/image/check_1.jpg",
   },
   {
