@@ -2,4 +2,5 @@ image/KakaoTalk_*.jpg
 node_modules
 .next
 out
+.env
 .env*.local

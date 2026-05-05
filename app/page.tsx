@@ -79,6 +79,16 @@ const promoSlides = [
 const kakaoMapUrl =
   "https://map.kakao.com/link/search/%EA%B0%95%EC%9B%90%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%9B%90%EC%A3%BC%EC%8B%9C%20%EC%8B%A0%EB%A6%BC%EB%A9%B4%20%EC%97%B0%EB%B4%89%EC%A0%95%EA%B8%B8%2059-6";
 
+type ReservationApiResponse =
+  | {
+      ok: true;
+      message: string;
+    }
+  | {
+      ok: false;
+      error: string;
+    };
+
 export default function HomePage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePhoto, setActivePhoto] = useState<number | null>(null);
@@ -86,6 +96,7 @@ export default function HomePage() {
   const [activePromo, setActivePromo] = useState(0);
   const [formStatus, setFormStatus] = useState("");
   const [formError, setFormError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -164,14 +175,40 @@ export default function HomePage() {
   const handleReservationSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormError(false);
+    setIsSubmitting(true);
     setFormStatus("상담 신청을 접수하는 중입니다.");
 
-    const formData = new FormData(event.currentTarget);
-    const payload = Object.fromEntries(formData.entries());
-    const text = `[원주 신림 전원주택 상담 신청]\n이름: ${payload.name}\n연락처: ${payload.phone}\n상담 방식: ${payload.contactType}\n문의: ${payload.message || "없음"}`;
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const payload = {
+      name: String(formData.get("name") || ""),
+      phone: String(formData.get("phone") || ""),
+      contactType: String(formData.get("contactType") || ""),
+      message: String(formData.get("message") || ""),
+    };
 
-    setFormStatus("상담 신청 내용이 준비되었습니다. 문자 화면에서 운영자 번호를 실제 번호로 교체해 주세요.");
-    window.location.href = `sms:010-0000-0000?body=${encodeURIComponent(text)}`;
+    try {
+      const response = await fetch("/api/reservation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      const result = (await response.json()) as ReservationApiResponse;
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.ok ? "상담 신청 중 문제가 발생했습니다." : result.error);
+      }
+
+      form.reset();
+      setFormStatus(result.message);
+    } catch (error) {
+      setFormError(true);
+      setFormStatus(error instanceof Error ? error.message : "상담 신청 중 문제가 발생했습니다.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -462,8 +499,8 @@ export default function HomePage() {
               수집 항목: 이름, 연락처, 문의 내용 · 이용 목적: 분양 상담 및 방문 안내 · 보유 기간:
               상담 종료 후 1년
             </p>
-            <button className="primary-button submit-button" type="submit">
-              상담 신청하기
+            <button className="primary-button submit-button" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "접수 중..." : "상담 신청하기"}
             </button>
             <p className={`form-status ${formError ? "error" : ""}`} role="status" aria-live="polite">
               {formStatus}
